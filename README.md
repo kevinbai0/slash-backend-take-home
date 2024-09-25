@@ -1,6 +1,6 @@
 # Slash backend take home
 
-This is the backend take home challenge for Slash. Clone this repository and share it privately with @kevinbai0 when you're done.
+This is the backend take home challenge for Slash. Clone this repository and push it to a private repo you own. Once you're done, shoot us an email to [engineering@joinslash.com](mailto:engineering@joinslash.com) and share your private Github repository with [@kevinbai0](https://github.com/kevinbai0).
 
 ### Overview
 
@@ -151,4 +151,4 @@ curl http://localhost:80/account/123
 
 ## Notes
 
-Please write and commit any notes while you're working on the challenge or after you're done. For example, are there things you would do in production, but don't have time to do now? What tradeoffs did you make WRT to time constraints? If you had 1 week to build this, what else would you consider? 
+Please write and commit any notes while you're working on the challenge or after you're done. For example, are there things you would do in production, but don't have time to do now? What tradeoffs did you make with respect to time constraints? If you had 1 week to build this, what else would you consider? 
