@@ -2,12 +2,12 @@ import { createTransaction, makeRequests, outputStats } from "./utils.js";
 import crypto from "node:crypto";
 
 /**
- * On the test server, this test is failing. This test checks for overspending.
+ * In the sample server implementation provided, this test fails by default.
+ * In your implementation, the final balance should not be less than 0. If it is,
+ * it means your implementation allowed the user to withdraw more than they had.
  */
 export default async function runRealtimeAuthTest() {
 	const accountId = crypto.randomUUID();
-
-	// Deposit to reach $10,000.00
 
 	const startTime = Date.now();
 	await makeRequests({ maxRps: 10 }, [

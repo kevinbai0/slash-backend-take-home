@@ -5,17 +5,19 @@ We're looking for strong backend engineers who are capable of building performan
 - [Slash frontend take home](https://github.com/kevinbai0/slash-frontend-take-home)
 - [Slash full stack take home](https://github.com/kevinbai0/slash-fullstack-take-home)
 
+This is *the* primary challenge we evaluate candidates with. We don't have multiple rounds of interviews and we don't do any other technical assessments. We want you to show us what you can do so give us your best work!
+
 Clone this repository and push it to a private repo you own. Once you're done, shoot us an email to [engineering@joinslash.com](mailto:engineering@joinslash.com) and share your private Github repository with [@kevinbai0](https://github.com/kevinbai0).
 
 ### Overview
 
-Slash keeps track of all balances in real-time for customers by maintaining a ledger of all transactions. For this challenge, you will implement a service that receives incoming transactions, and responds (approve or reject) to transaction requests based off the account's current balance. 
+Slash keeps track of all balances in real-time for customers by maintaining a ledger of all transactions. For this challenge, you will implement a service that receives incoming transactions, and responds to transaction requests (approve or reject) based off the account's current balance.
 
 ### Requirements
 
 1. Write a web server that conforms to the [specification](#specification). Your web server should be horizontally scalable. It will be ran with several replicas behind an nginx proxy. Your web-server should read the `PORT` environment variable to know which port to listen on.
 2. You can use any services that you see fit (like a database). While we want you to build this out with production in mind, the take home is still a proof-of-concept so there is no need to consider auth, or any complex deployment configurations.
-3. The system should be robust and fault-tolerant. If any resources go down, data should not be lost.
+3. The system should be robust and fault-tolerant. If any resources go down, data should not be lost. For example, if your data storage goes down, you shouldn't lose transactions. If some web servers go down, the system should continue to operate normally.
 4. Correctness is important. The ledger should maintain an accurate record of all transactions, and accounts should not be able to reach a negative balance.
 5. Make your system as performant as possible. We will stress test your service.
 
@@ -65,9 +67,9 @@ paths:
         '200':
           description: Transaction processed successfully
         '201':
-          description: Withdrawal request approved
+          description: withdraw_request approved
         '402':
-          description: Withdrawal request denied
+          description: withdraw_request denied
 
   /account/{accountId}:
     get:
@@ -121,7 +123,8 @@ components:
         - balance
 ```
 
-Withdraw requests should respond within 3 seconds. Otherwise, we assume a timeout and reject the request.
+Transaction of type `withdraw_request` should respond within 3 seconds. Otherwise, we assume a timeout and reject the request.
+If a transaction of type `withdraw_request` is approved, a subsequent transaction of type `withdraw` will occur no matter what, even if it causes a balance to go negative.
 
 ### Examples
 
@@ -152,14 +155,19 @@ curl -X POST http://localhost:80/transaction -H "Content-Type: application/json"
 # assuming your implementation is correct, a withdraw without a withdraw_request will never be more
 # than the current balance.
 
+curl http://localhost:80/account/123
+# should return a balance of 0
+
 curl -X POST http://localhost:80/transaction -H "Content-Type: application/json" -d '{"id": "6", "type": "withdraw", "amount": 100, "accountId": "123", "timestamp": "2023-01-01T00:00:05Z"}'
-# last withdraw request should technically never happen, but if it does, 
-# something went wrong. We can't block the transaction from happening, so we must allow it.
+# This last withdraw should technically never happen if the implementation is correct. If it does, then you may have
+# accidentally approved too many withdraw_requests. In a real-world case, this is as-if Slash approved a withdrawal
+# for more than a user had. The withdrawal would still go through, but the user would be left with negative balance and
+# Slash would owe money.
 
 curl http://localhost:80/account/123
-# should return a balance of -100 (because of the last withdraw that shouldn't have happened)
+# should return a balance of -100 (this is the case where an additional withdraw happened that shouldn't have)
 ```
 
 ## Notes
 
-Please write and commit any notes while you're working on the challenge or after you're done. For example, are there things you would do in production, but don't have time to do now? What tradeoffs did you make with respect to time constraints? If you had 1 week to build this, what else would you consider? 
+Please write and commit any notes while you're working on the challenge or after you're done. For example, are there things you would do in production, but don't have time to do now? What tradeoffs did you make with respect to time constraints? If you had 1 week to build this, what else would you consider? More importantly than just the final output, we want to know and understand your thought process, how you choose to make tradeoffs, and your ability to think through edge cases critically.

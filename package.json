@@ -2,7 +2,7 @@
 	"name": "slash-backend-take-home",
 	"version": "1.0.0",
 	"type": "module",
-	"description": "This is the backend take home challenge for Slash. Fork this project and share the repo with @kevinbai0 when you're done.",
+	"description": "Slash backend take home challenge",
 	"main": "index.js",
 	"scripts": {
 		"test": "tsx src/tests/runner.ts",
