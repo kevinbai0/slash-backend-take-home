@@ -30,6 +30,11 @@ By default, `src/server.ts` is a simple in-memory implementation of a sample sin
 
 You may also choose to make whatever changes you'd like to the docker-compose.yaml file. You must still make sure that a web server is exposed through port 80 (which is what nginx exposes).
 
+
+### Time constraints
+
+Spend as much time as you'd like on the challenge, but don't spend more than 8 hours unless you're _really_ enjoying it and want to go the extra mile. Try spending at least 2 hours, and if you don't have time after that, let us know so we can evaluate accordingly (no penalty for the amount of time you spent, just be honest!).
+
 ### Specification
 
 Your web server should conform to the following OpenAPI specification:
@@ -125,7 +130,7 @@ curl http://localhost:80/account/123
 curl -X POST http://localhost:80/transaction -H "Content-Type: application/json" -d '{"id": "2", "type": "withdraw_request", "amount": 50, "accountId": "123", "timestamp": "2023-01-01T00:00:01Z"}' 
 # should respond with a 201
 
-curl -X POST http://localhost:80/transaction -H "Content-Type: application/json" -d '{"id": "3", "type": "withdraw-request", "amount": 51, "accountId": "123", "timestamp": "2023-01-01T00:00:02Z"}'
+curl -X POST http://localhost:80/transaction -H "Content-Type: application/json" -d '{"id": "3", "type": "withdraw_request", "amount": 51, "accountId": "123", "timestamp": "2023-01-01T00:00:02Z"}'
 # should respond with a 402 because if we approve both, the balance will go negative
 
 curl http://localhost:80/account/123
@@ -143,10 +148,11 @@ curl -X POST http://localhost:80/transaction -H "Content-Type: application/json"
 # than the current balance.
 
 curl -X POST http://localhost:80/transaction -H "Content-Type: application/json" -d '{"id": "6", "type": "withdraw", "amount": 100, "accountId": "123", "timestamp": "2023-01-01T00:00:05Z"}'
+# last withdraw request should technically never happen, but if it does, 
+# something went wrong. We can't block the transaction from happening, so we must allow it.
 
 curl http://localhost:80/account/123
-# last withdraw request should technically never happen, but if it does, 
-# something went wrong but we can't block the transaction from happening
+# should return a balance of -100 (because of the last withdraw that shouldn't have happened)
 ```
 
 ## Notes
