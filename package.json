@@ -1,0 +1,25 @@
+{
+	"name": "slash-backend-take-home",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "This is the backend take home challenge for Slash. Fork this project and share the repo with @kevinbai0 when you're done.",
+	"main": "index.js",
+	"scripts": {
+		"test": "tsx src/tests/runner.ts",
+		"build": "tsc",
+		"check": "tsx src/tests/check.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/express": "^4.17.21",
+		"express": "^4.21.0",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.19.1",
+		"typescript": "^5.6.2"
+	},
+	"dependencies": {
+		"tinypool": "^1.0.1"
+	}
+}
